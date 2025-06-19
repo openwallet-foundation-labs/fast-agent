@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, List, Tuple, Type
 
 from mcp.types import EmbeddedResource, ImageContent, TextContent
+from pydantic_core import Url
 
 from mcp_agent.core.prompt import Prompt
 from mcp_agent.event_progress import ProgressAction
@@ -267,6 +268,14 @@ class AnthropicAugmentedLLM(AugmentedLLM[MessageParam, Message]):
             arguments = self.prepare_provider_arguments(
                 base_args, params, self.ANTHROPIC_EXCLUDE_FIELDS
             )
+
+            # for some reason this would otherwise result in an "Error during generation: Object of type Url is not JSON serializable"
+            for message in arguments["messages"]:
+                for content in message["content"]:
+                    title = content.get("title")
+                    if isinstance(title, Url):
+                        print("stringifying title", title)
+                        content["title"] = str(title)
 
             self.logger.debug(f"{arguments}")
 

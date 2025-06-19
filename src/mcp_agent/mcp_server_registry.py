@@ -191,9 +191,11 @@ class ServerRegistry:
             # Use sse_client to get the read and write streams
             async with _add_none_to_context(
                 sse_client(
+                    "fast-agent",
                     config.url,
                     headers,
                     sse_read_timeout=config.read_transport_sse_timeout_seconds,
+                    verbose=False,
                 )
             ) as (read_stream, write_stream, _):
                 session = client_session_factory(
@@ -215,7 +217,7 @@ class ServerRegistry:
             # Apply HuggingFace authentication if appropriate
             headers = add_hf_auth_header(config.url, config.headers)
 
-            async with streamablehttp_client(config.url, headers) as (
+            async with streamablehttp_client("fast-agent", config.url, headers, verbose=False) as (
                 read_stream,
                 write_stream,
                 _,

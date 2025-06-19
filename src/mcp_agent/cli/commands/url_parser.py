@@ -103,7 +103,7 @@ def generate_server_name(url: str) -> str:
 
 
 def parse_server_urls(
-    urls_param: str, auth_token: str = None
+    urls_param: str, auth_token: str | None = None
 ) -> List[Tuple[str, Literal["http", "sse"], str, Dict[str, str] | None]]:
     """
     Parse a comma-separated list of URLs into server configurations.
@@ -132,12 +132,27 @@ def parse_server_urls(
     # Parse each URL
     result = []
     for url in url_list:
-        server_name, transport_type, parsed_url = parse_server_url(url)
-        
-        # Apply HuggingFace authentication if appropriate
-        final_headers = add_hf_auth_header(parsed_url, headers)
-        
-        result.append((server_name, transport_type, parsed_url, final_headers))
+        if url.startswith("did:"):
+            name = url.split(":")[-1]
+            # remove uuid to ensure server name + tool name fits in 64 characters
+            name = name[:-36].removesuffix("-")
+
+            # detect transport type
+            trans = "unknown"
+            for transport in ["Sse", "Http"]:  # fast-agent does not support WebSockets
+                if name.endswith(f"Tmcp{transport}Server"):
+                    name = name.removesuffix(f"Tmcp{transport}Server")
+                    trans = transport.lower()
+            if trans == "unknown":
+                raise Exception("Could not determine transport type of", url, name)
+            result.append((name, trans, url, None))
+        else:
+            server_name, transport_type, parsed_url = parse_server_url(url)
+
+            # Apply HuggingFace authentication if appropriate
+            final_headers = add_hf_auth_header(parsed_url, headers)
+
+            result.append((server_name, transport_type, parsed_url, final_headers))
 
     return result
 
@@ -184,7 +199,7 @@ def generate_server_configs(
 
         # Add headers if provided
         if headers:
-            config["headers"] = headers
+            config["headers"] = headers  # type: ignore
 
         server_configs[final_name] = config
 
