@@ -331,9 +331,10 @@ class MCPConnectionManager(ContextDependent):
             elif config.transport == "sse":
                 return _add_none_to_context(
                     sse_client(
+                        "fastAgent",
                         config.url,
                         config.headers,
-                        sse_read_timeout=config.read_transport_sse_timeout_seconds,
+                        sse_read_timeout=config.read_transport_sse_timeout_seconds
                     )
                 )
             elif config.transport == "http":

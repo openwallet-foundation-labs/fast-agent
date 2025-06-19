@@ -132,12 +132,18 @@ def parse_server_urls(
     # Parse each URL
     result = []
     for url in url_list:
-        server_name, transport_type, parsed_url = parse_server_url(url)
-        
-        # Apply HuggingFace authentication if appropriate
-        final_headers = add_hf_auth_header(parsed_url, headers)
-        
-        result.append((server_name, transport_type, parsed_url, final_headers))
+        if url.startswith("did:"):
+            name = url.split(":")[-1]
+            name = name[:-36]  # remove uuid to ensure server name + tool name fits in 64 characters
+            name = name.removesuffix("-").removesuffix("TmcpSseServer").removesuffix("TmcpWsServer")
+            result.append((name, "sse", url, None))
+        else:
+            server_name, transport_type, parsed_url = parse_server_url(url)
+
+            # Apply HuggingFace authentication if appropriate
+            final_headers = add_hf_auth_header(parsed_url, headers)
+
+            result.append((server_name, transport_type, parsed_url, final_headers))
 
     return result
 
