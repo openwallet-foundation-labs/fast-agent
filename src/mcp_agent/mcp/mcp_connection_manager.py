@@ -166,10 +166,7 @@ class ServerConnection:
         )
 
         session = self._client_session_factory(
-            read_stream, 
-            send_stream, 
-            read_timeout,
-            server_config=self.server_config
+            read_stream, send_stream, read_timeout, server_config=self.server_config
         )
 
         self.session = session
@@ -331,6 +328,7 @@ class MCPConnectionManager(ContextDependent):
             elif config.transport == "sse":
                 return _add_none_to_context(
                     sse_client(
+                        "fastAgent",
                         config.url,
                         config.headers,
                         sse_read_timeout=config.read_transport_sse_timeout_seconds,
