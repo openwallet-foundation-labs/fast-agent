@@ -332,10 +332,11 @@ class MCPConnectionManager(ContextDependent):
                         config.url,
                         config.headers,
                         sse_read_timeout=config.read_transport_sse_timeout_seconds,
+                        verbose=False,
                     )
                 )
             elif config.transport == "http":
-                return streamablehttp_client(config.url, config.headers)
+                return streamablehttp_client("fastAgent", config.url, config.headers, verbose=False)
             else:
                 raise ValueError(f"Unsupported transport: {config.transport}")
 

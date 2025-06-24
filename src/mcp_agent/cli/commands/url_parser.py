@@ -136,6 +136,7 @@ def parse_server_urls(
             name = url.split(":")[-1]
             # remove uuid to ensure server name + tool name fits in 64 characters
             name = name[:-36].removesuffix("-")
+
             # detect transport type
             trans = "unknown"
             for transport in ["Sse", "Http"]:  # fast-agent does not support WebSockets

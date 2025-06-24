@@ -73,7 +73,11 @@ class ServerRegistry:
         """
         if config is None:
             self.registry = self.load_registry_from_file(config_path)
-        elif config.mcp is not None and hasattr(config.mcp, 'servers') and config.mcp.servers is not None:
+        elif (
+            config.mcp is not None
+            and hasattr(config.mcp, "servers")
+            and config.mcp.servers is not None
+        ):
             # Ensure config.mcp exists, has a 'servers' attribute, and it's not None
             self.registry = config.mcp.servers
         else:
@@ -95,13 +99,17 @@ class ServerRegistry:
         Raises:
             ValueError: If the configuration is invalid.
         """
-        servers = {} 
+        servers = {}
 
         settings = get_settings(config_path)
-        
-        if settings.mcp is not None and hasattr(settings.mcp, 'servers') and settings.mcp.servers is not None:
+
+        if (
+            settings.mcp is not None
+            and hasattr(settings.mcp, "servers")
+            and settings.mcp.servers is not None
+        ):
             return settings.mcp.servers
-        
+
         return servers
 
     @asynccontextmanager
@@ -183,9 +191,11 @@ class ServerRegistry:
             # Use sse_client to get the read and write streams
             async with _add_none_to_context(
                 sse_client(
+                    "fast-agent",
                     config.url,
                     headers,
                     sse_read_timeout=config.read_transport_sse_timeout_seconds,
+                    verbose=False,
                 )
             ) as (read_stream, write_stream, _):
                 session = client_session_factory(
@@ -207,7 +217,7 @@ class ServerRegistry:
             # Apply HuggingFace authentication if appropriate
             headers = add_hf_auth_header(config.url, config.headers)
 
-            async with streamablehttp_client(config.url, headers) as (
+            async with streamablehttp_client("fast-agent", config.url, headers, verbose=False) as (
                 read_stream,
                 write_stream,
                 _,
