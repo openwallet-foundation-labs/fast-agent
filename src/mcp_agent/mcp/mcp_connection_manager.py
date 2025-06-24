@@ -335,7 +335,7 @@ class MCPConnectionManager(ContextDependent):
                     )
                 )
             elif config.transport == "http":
-                return streamablehttp_client(config.url, config.headers)
+                return streamablehttp_client("fastAgent", config.url, config.headers)
             else:
                 raise ValueError(f"Unsupported transport: {config.transport}")
 
