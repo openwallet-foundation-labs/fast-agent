@@ -5,6 +5,9 @@ mcp:
   servers:
     Demo: # demo/server/server.py
       transport: "sse"
-      url: "did:webvh:QmUiP7DdmPAdpB2EwZHjuECj1VszcXz9hB6sZo9GDfaKv4:did.teaspoon.world:endpoint:DemoTmcpSseServer-c8122659-e9db-4ec4-a487-b6fa5b394722" # put your server's DID here
+      url: "did:webvh:QmYGANngq3HzToTDxaviEpHT9791WEKKU8FnkYnzCzsJ6Z:did.teaspoon.world:endpoint:DemoTmcpSseServer-8979ca15-f794-45fc-881a-588e01b15ab0" # put your server's DID here
+      roots:
+        - uri: "file://some-file.txt"
+          name: Some File
 
 anthropic:
