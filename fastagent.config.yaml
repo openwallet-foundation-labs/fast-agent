@@ -5,9 +5,18 @@ mcp:
   servers:
     Demo: # demo/server/server.py
       transport: "sse"
-      url: "did:webvh:QmYGANngq3HzToTDxaviEpHT9791WEKKU8FnkYnzCzsJ6Z:did.teaspoon.world:endpoint:DemoTmcpSseServer-8979ca15-f794-45fc-881a-588e01b15ab0" # put your server's DID here
+      url: "did:webvh:QmbJNccpFw2fQFCbsiurDnmPPbKWScnTHwC3tYBVPKQrga:did.teaspoon.world:endpoint:DemoTmcpSseServer-2b266bcd-7f12-4519-972c-9640d6f419da" # put your server's DID here
       roots:
         - uri: "file://some-file.txt"
           name: Some File
+
+    Gmail: # demo/server-gmail/gmail_server.py
+      transport: "sse"
+      url: "did:webvh:QmeDcWRTjiRremuXKksUmoET3B64WgZkpjrxQ5TqjMhBqt:did.teaspoon.world:endpoint:GmailServerTmcpSseServer-8e004b31-b2ff-480e-9881-7ef7911bd02d"
+
+    GitHub: # demo/server-github-demo/server.py
+      transport: "sse"
+      url: "did:webvh:QmSJiBVBdcy5dpRF574YTKiJGG5gNRM8phE9z51qxaQ98s:did.teaspoon.world:endpoint:GitHubDemoTmcpSseServer-5e699d56-533b-4ca8-bbf3-dfd06aaad5b2"
+
 
 anthropic:
