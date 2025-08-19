@@ -4,19 +4,20 @@ auto_sampling: true
 mcp:
   servers:
     Demo: # demo/server/server.py
-      transport: "sse"
-      url: "did:webvh:QmbJNccpFw2fQFCbsiurDnmPPbKWScnTHwC3tYBVPKQrga:did.teaspoon.world:endpoint:DemoTmcpSseServer-2b266bcd-7f12-4519-972c-9640d6f419da" # put your server's DID here
+      transport: "http"
+      url: "did:webvh:QmcbCiD4YPad7Vkyo9waM8E7bduUaw6XLoEJ1XKbGPZikE:did.teaspoon.world:endpoint:tmcp-8ff3f79e-495f-43e2-b906-35c886afb41b" # put your server's DID here
       roots:
         - uri: "file://some-file.txt"
           name: Some File
 
+    DuckDuckGo: #demo/server-duckduckgo $ uv run duckduckgo-mcp-server
+      transport: "http"
+      url: "did:webvh:QmQetHAFkPCJh6qNYvskjMsRE2iW9f6sZBrXqftEDvYFAn:did.teaspoon.world:endpoint:tmcp-6e6054fe-2cd2-4f64-bb98-c5a36c31951e"
+
     Gmail: # demo/server-gmail/gmail_server.py
-      transport: "sse"
-      url: "did:webvh:QmeDcWRTjiRremuXKksUmoET3B64WgZkpjrxQ5TqjMhBqt:did.teaspoon.world:endpoint:GmailServerTmcpSseServer-8e004b31-b2ff-480e-9881-7ef7911bd02d"
+      transport: "http"
+      url: "did:webvh:QmVCKzXb199BgzvL7eDFz8BATVJZfVcVH7G5AQaaYj7PAj:did.teaspoon.world:endpoint:tmcp-99140102-b43d-4a27-8cfb-3044dc9539f6"
 
     GitHub: # demo/server-github-demo/server.py
-      transport: "sse"
-      url: "did:webvh:QmSJiBVBdcy5dpRF574YTKiJGG5gNRM8phE9z51qxaQ98s:did.teaspoon.world:endpoint:GitHubDemoTmcpSseServer-5e699d56-533b-4ca8-bbf3-dfd06aaad5b2"
-
-
-anthropic:
+      transport: "http"
+      url: "did:webvh:QmUYzK2tgVEKhhiH2Nch83LfmKJqFCwuBTMLZtZh5Xtrko:did.teaspoon.world:endpoint:tmcp-ba2c1fc8-ef24-41c1-a8f6-9838b34de4da"

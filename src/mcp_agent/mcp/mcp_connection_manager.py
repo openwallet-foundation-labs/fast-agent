@@ -7,6 +7,7 @@ import traceback
 from datetime import timedelta
 from typing import (
     TYPE_CHECKING,
+    Any,
     AsyncGenerator,
     Callable,
     Dict,
@@ -25,6 +26,7 @@ from mcp.client.stdio import (
 )
 from mcp.client.streamable_http import GetSessionIdCallback, streamablehttp_client
 from mcp.types import JSONRPCMessage, ServerCapabilities
+from tmcp import TmcpManager
 
 from mcp_agent.config import MCPServerSettings
 from mcp_agent.context_dependent import ContextDependent
@@ -263,7 +265,10 @@ class MCPConnectionManager(ContextDependent):
     """
 
     def __init__(
-        self, server_registry: "ServerRegistry", context: Optional["Context"] = None
+        self,
+        server_registry: "ServerRegistry",
+        context: Optional["Context"] = None,
+        **tmcp_settings: Any,
     ) -> None:
         super().__init__(context=context)
         self.server_registry = server_registry
@@ -272,6 +277,7 @@ class MCPConnectionManager(ContextDependent):
         # Manage our own task group - independent of task context
         self._task_group = None
         self._task_group_active = False
+        self._tmcp = TmcpManager(**tmcp_settings)
 
     async def __aenter__(self):
         # Create a task group that isn't tied to a specific task
@@ -328,6 +334,7 @@ class MCPConnectionManager(ContextDependent):
         logger.debug(f"{server_name}: Found server configuration=", data=config.model_dump())
 
         def transport_context_factory():
+            hook = self._tmcp.get_client_hook(config.url)
             if config.transport == "stdio":
                 server_params = StdioServerParameters(
                     command=config.command,
@@ -343,15 +350,14 @@ class MCPConnectionManager(ContextDependent):
             elif config.transport == "sse":
                 return _add_none_to_context(
                     sse_client(
-                        "fastAgent",
                         config.url,
                         config.headers,
                         sse_read_timeout=config.read_transport_sse_timeout_seconds,
-                        verbose=False,
+                        transport_hook=hook,
                     )
                 )
             elif config.transport == "http":
-                return streamablehttp_client("fastAgent", config.url, config.headers, verbose=False)
+                return streamablehttp_client(config.url, config.headers, transport_hook=hook)
             else:
                 raise ValueError(f"Unsupported transport: {config.transport}")
 
